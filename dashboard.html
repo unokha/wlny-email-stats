@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email List Hygiene Report — Weight Loss CNY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF6F0;
+    --bg-card: #FFFFFF;
+    --ink: #1A1815;
+    --ink-soft: #5A554D;
+    --rule: #E5DFD3;
+    --accent: #2D5F3F;
+    --safe: #2D5F3F;
+    --safe-soft: #E8EFE9;
+    --review: #B8741A;
+    --review-soft: #F5EBDB;
+    --remove: #A8362F;
+    --remove-soft: #F3E1DE;
+    --neutral-bar: #C8C0B0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding: 56px 32px;
+  }
+  .container { max-width: 1180px; margin: 0 auto; }
+  .serif { font-family: 'Fraunces', serif; font-weight: 400; letter-spacing: -0.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
+
+  /* HEADER */
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 48px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 14px; }
+  h1.title { font-family: 'Fraunces', serif; font-weight: 400; font-size: 56px; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12px; max-width: 760px; }
+  h1.title em { font-style: italic; color: var(--accent); }
+  .lede { font-size: 17px; line-height: 1.55; color: var(--ink-soft); max-width: 720px; }
+  .meta { display: flex; gap: 36px; margin-top: 28px; flex-wrap: wrap; }
+  .meta-item .mono { display: block; margin-bottom: 4px; }
+  .meta-item .v { font-size: 15px; color: var(--ink); }
+
+  /* SECTION */
+  section { margin-bottom: 64px; }
+  .section-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 400; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .section-sub { color: var(--ink-soft); margin-bottom: 28px; max-width: 720px; }
+
+  /* KPI ROW */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .kpi { background: var(--bg-card); padding: 28px 24px; }
+  .kpi .mono { margin-bottom: 14px; }
+  .kpi .num { font-family: 'Fraunces', serif; font-weight: 400; font-size: 48px; line-height: 1; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .kpi .pct { font-size: 13px; color: var(--ink-soft); }
+  .kpi.safe .num { color: var(--safe); }
+  .kpi.review .num { color: var(--review); }
+  .kpi.remove .num { color: var(--remove); }
+
+  /* BUCKETS */
+  .buckets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .bucket { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 4px; padding: 28px; position: relative; }
+  .bucket::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .bucket.safe::before { background: var(--safe); }
+  .bucket.review::before { background: var(--review); }
+  .bucket.remove::before { background: var(--remove); }
+  .bucket-label { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 5px 10px; border-radius: 100px; margin-bottom: 16px; }
+  .bucket.safe .bucket-label { background: var(--safe-soft); color: var(--safe); }
+  .bucket.review .bucket-label { background: var(--review-soft); color: var(--review); }
+  .bucket.remove .bucket-label { background: var(--remove-soft); color: var(--remove); }
+  .bucket h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 28px; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .bucket .count { font-family: 'Fraunces', serif; font-size: 44px; line-height: 1; margin: 10px 0 4px; letter-spacing: -0.02em; }
+  .bucket .share { font-size: 13px; color: var(--ink-soft); margin-bottom: 18px; }
+  .bucket .desc { font-size: 14px; line-height: 1.55; color: var(--ink-soft); margin-bottom: 18px; }
+  .bucket .action { font-size: 13px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  .bucket .action .mono { margin-bottom: 6px; display: block; }
+  .bucket .action .text { color: var(--ink); font-weight: 500; }
+
+  /* TABLE */
+  .table-wrap { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead { background: #F4EFE5; }
+  th { text-align: left; padding: 14px 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); font-weight: 500; border-bottom: 1px solid var(--rule); }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td { padding: 14px 20px; border-bottom: 1px solid var(--rule); }
+  tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+  .pill.safe { background: var(--safe-soft); color: var(--safe); }
+  .pill.review { background: var(--review-soft); color: var(--review); }
+  .pill.remove { background: var(--remove-soft); color: var(--remove); }
+
+  /* SPEND CALLOUT */
+  .callout { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 4px; padding: 36px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+  .callout-num { font-family: 'Fraunces', serif; font-size: 84px; line-height: 1; letter-spacing: -0.03em; color: var(--accent); margin-bottom: 12px; }
+  .callout h3 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 22px; margin-bottom: 10px; }
+  .callout p { color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+  .callout-stats { display: flex; flex-direction: column; gap: 18px; padding-left: 36px; border-left: 1px solid var(--rule); }
+  .callout-stat .mono { margin-bottom: 6px; }
+  .callout-stat .v { font-family: 'Fraunces', serif; font-size: 28px; letter-spacing: -0.01em; }
+
+  /* DOMAIN BARS */
+  .bars { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: grid; grid-template-columns: 120px 1fr 80px; gap: 18px; align-items: center; }
+  .bar-label { font-size: 14px; }
+  .bar-track { height: 28px; background: #EFE9DC; border-radius: 2px; overflow: hidden; display: flex; }
+  .bar-seg { height: 100%; transition: width 0.3s; }
+  .bar-seg.safe { background: var(--safe); }
+  .bar-seg.review { background: var(--review); }
+  .bar-seg.remove { background: var(--remove); }
+  .bar-total { font-family: 'JetBrains Mono', monospace; font-size: 13px; text-align: right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .legend { display: flex; gap: 24px; margin-bottom: 24px; font-size: 13px; color: var(--ink-soft); }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+  .legend-dot.safe { background: var(--safe); }
+  .legend-dot.review { background: var(--review); }
+  .legend-dot.remove { background: var(--remove); }
+
+  /* ACTIONS */
+  .actions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .action-card { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 4px; padding: 28px; }
+  .action-num { font-family: 'Fraunces', serif; font-size: 20px; color: var(--accent); margin-bottom: 8px; }
+  .action-card h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 18px; margin-bottom: 8px; }
+  .action-card p { color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+
+  /* FOOTER */
+  footer { padding-top: 32px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; color: var(--ink-soft); font-size: 13px; }
+  footer .mono { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    body { padding: 32px 20px; }
+    h1.title { font-size: 38px; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .buckets { grid-template-columns: 1fr; }
+    .callout { grid-template-columns: 1fr; gap: 28px; }
+    .callout-stats { padding-left: 0; border-left: none; border-top: 1px solid var(--rule); padding-top: 28px; }
+    .bar-row { grid-template-columns: 90px 1fr 60px; gap: 10px; }
+    .actions-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Email List Hygiene Report</div>
+    <h1 class="title" class="serif">A clean foundation for <em>deliverable, deliberate</em> email outreach.</h1>
+    <p class="lede">A full verification pass was completed on the contact database. This report summarises the outcome, segments the list by sending suitability, and outlines the recommended next steps before the next campaign.</p>
+    <div class="meta">
+      <div class="meta-item"><span class="mono">Client</span><span class="v">Weight Loss CNY</span></div>
+      <div class="meta-item"><span class="mono">Prepared by</span><span class="v">Tecomato</span></div>
+      <div class="meta-item"><span class="mono">Records processed</span><span class="v">5,329</span></div>
+      <div class="meta-item"><span class="mono">Verification source</span><span class="v">Provider classification</span></div>
+    </div>
+  </header>
+
+  <!-- KPI SECTION -->
+  <section>
+    <h2 class="section-title">At a glance</h2>
+    <p class="section-sub">The full database was scored against an industry standard email verification service. Each address now sits in one of three sending buckets.</p>
+    <div class="kpis">
+      <div class="kpi">
+        <span class="mono">Total processed</span>
+        <div class="num">5,329</div>
+        <div class="pct">Contacts in source list</div>
+      </div>
+      <div class="kpi safe">
+        <span class="mono">Safe to send</span>
+        <div class="num">4,302</div>
+        <div class="pct">80.7% of the list</div>
+      </div>
+      <div class="kpi review">
+        <span class="mono">Review later</span>
+        <div class="num">738</div>
+        <div class="pct">13.8% of the list</div>
+      </div>
+      <div class="kpi remove">
+        <span class="mono">Suppress</span>
+        <div class="num">289</div>
+        <div class="pct">5.4% of the list</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUCKETS DETAIL -->
+  <section>
+    <h2 class="section-title">The three buckets</h2>
+    <p class="section-sub">Each bucket carries a different deliverability risk profile and a different recommended treatment.</p>
+    <div class="buckets">
+
+      <div class="bucket safe">
+        <span class="bucket-label">Bucket 1</span>
+        <h3>Safe to send</h3>
+        <div class="count">4,302</div>
+        <div class="share">80.7% of total list</div>
+        <p class="desc">Addresses returned a clean Verified result. The mail server confirmed the mailbox exists and is accepting mail. These can be loaded into the sending platform with confidence.</p>
+        <div class="action">
+          <span class="mono">Recommendation</span>
+          <span class="text">Use as the primary sending audience.</span>
+        </div>
+      </div>
+
+      <div class="bucket review">
+        <span class="bucket-label">Bucket 2</span>
+        <h3>Review and re verify</h3>
+        <div class="count">738</div>
+        <div class="share">13.8% of total list</div>
+        <p class="desc">Addresses where the result was ambiguous. Includes Unknown (server did not respond), Catch All (server accepts everything), and Role accounts. Sending to these as is risks deliverability damage.</p>
+        <div class="action">
+          <span class="mono">Recommendation</span>
+          <span class="text">Hold from sends. Re verify in 30 to 60 days.</span>
+        </div>
+      </div>
+
+      <div class="bucket remove">
+        <span class="bucket-label">Bucket 3</span>
+        <h3>Suppress permanently</h3>
+        <div class="count">289</div>
+        <div class="share">5.4% of total list</div>
+        <p class="desc">Hard bad addresses. Includes Undeliverable, Complainer, Spam Trap, Bot, and Malicious results. Continuing to send to these will harm sender reputation and lift bounce rates above the safe threshold.</p>
+        <div class="action">
+          <span class="mono">Recommendation</span>
+          <span class="text">Move to a suppression list. Do not email.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DETAIL TABLE -->
+  <section>
+    <h2 class="section-title">Result breakdown in detail</h2>
+    <p class="section-sub">Every contact in the invalid file was further classified into one of eight result types. This view shows the full distribution.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Result</th>
+            <th>Bucket</th>
+            <th class="num">Count</th>
+            <th class="num">Share of list</th>
+            <th>What it means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Verified</strong></td><td><span class="pill safe">Safe</span></td><td class="num">4,302</td><td class="num">80.7%</td><td>Mailbox confirmed by the recipient server.</td></tr>
+          <tr><td><strong>Unknown</strong></td><td><span class="pill review">Review</span></td><td class="num">572</td><td class="num">10.7%</td><td>Recipient server did not return a clear answer. Likely temporary.</td></tr>
+          <tr><td><strong>Undeliverable</strong></td><td><span class="pill remove">Remove</span></td><td class="num">198</td><td class="num">3.7%</td><td>Mailbox does not exist. Will hard bounce.</td></tr>
+          <tr><td><strong>Catch All</strong></td><td><span class="pill review">Review</span></td><td class="num">163</td><td class="num">3.1%</td><td>Server accepts every address. Real existence cannot be confirmed.</td></tr>
+          <tr><td><strong>Complainer</strong></td><td><span class="pill remove">Remove</span></td><td class="num">68</td><td class="num">1.3%</td><td>Address has filed spam complaints against senders previously.</td></tr>
+          <tr><td><strong>Spam Trap</strong></td><td><span class="pill remove">Remove</span></td><td class="num">18</td><td class="num">0.3%</td><td>Address operated by anti spam organisations. High reputation risk.</td></tr>
+          <tr><td><strong>Bot</strong></td><td><span class="pill remove">Remove</span></td><td class="num">4</td><td class="num">0.1%</td><td>Automated address. Not a human recipient.</td></tr>
+          <tr><td><strong>Role</strong></td><td><span class="pill review">Review</span></td><td class="num">3</td><td class="num">0.1%</td><td>Generic mailbox such as info@ or sales@. Low engagement.</td></tr>
+          <tr><td><strong>Malicious</strong></td><td><span class="pill remove">Remove</span></td><td class="num">1</td><td class="num">0.0%</td><td>Address flagged as a known abuse source.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SPEND AT RISK -->
+  <section>
+    <h2 class="section-title">Past customer value sitting in invalid records</h2>
+    <p class="section-sub">A separate insight surfaced during the audit. Some past purchasers can no longer be reached by email.</p>
+    <div class="callout">
+      <div>
+        <div class="callout-num">$99,268</div>
+        <h3>In historical spend is attached to invalid email records.</h3>
+        <p>Two hundred contacts who previously transacted with the practice now sit in the invalid bucket. Their email addresses are unreachable, but their phone numbers and postal details are still on file. A small reactivation effort outside email could recover a portion of this audience.</p>
+      </div>
+      <div class="callout-stats">
+        <div class="callout-stat">
+          <span class="mono">Past purchasers, invalid email</span>
+          <span class="v">200 contacts</span>
+        </div>
+        <div class="callout-stat">
+          <span class="mono">In review bucket</span>
+          <span class="v">141 / $71,381</span>
+        </div>
+        <div class="callout-stat">
+          <span class="mono">In suppress bucket</span>
+          <span class="v">59 / $27,886</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMAIN BREAKDOWN -->
+  <section>
+    <h2 class="section-title">Where the list sits, by mailbox provider</h2>
+    <p class="section-sub">Distribution of contacts across major providers. Some providers carry a heavier share of risky addresses than others.</p>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot safe"></span> Safe to send</div>
+      <div class="legend-item"><span class="legend-dot review"></span> Review</div>
+      <div class="legend-item"><span class="legend-dot remove"></span> Suppress</div>
+    </div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <!-- RECOMMENDED ACTIONS -->
+  <section>
+    <h2 class="section-title">Recommended next steps</h2>
+    <p class="section-sub">A practical sequence to move from the cleaned data to the next campaign.</p>
+    <div class="actions-grid">
+      <div class="action-card">
+        <div class="action-num">01</div>
+        <h4>Load the verified file as the active audience</h4>
+        <p>Import the 4,302 verified contacts into the sending platform as the primary list. This becomes the baseline for any campaign that goes out in the next 90 days.</p>
+      </div>
+      <div class="action-card">
+        <div class="action-num">02</div>
+        <h4>Move the suppress bucket out of reach</h4>
+        <p>The 289 hard bad records should be tagged and excluded from every send moving forward. Keeping them in a suppression list rather than deleting them prevents accidental re import later.</p>
+      </div>
+      <div class="action-card">
+        <div class="action-num">03</div>
+        <h4>Park the review bucket for a second pass</h4>
+        <p>The 738 ambiguous addresses are held back and re run through verification after 30 to 60 days. A portion will resolve to verified on the second attempt.</p>
+      </div>
+      <div class="action-card">
+        <div class="action-num">04</div>
+        <h4>Plan a phone or postal touch for high value invalid contacts</h4>
+        <p>The 200 past purchasers with unreachable email are worth a small outbound effort through a different channel. Phone numbers are present on the records.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div><span class="mono">Tecomato</span> · CRM and automation strategy</div>
+    <div>Email list hygiene report</div>
+  </footer>
+
+</div>
+
+<script>
+  // Domain breakdown data: name, safe, review, remove
+  const domains = [
+    { name: 'Google',     safe: 2704, review: 29,  remove: 85 },
+    { name: 'Yahoo',      safe: 603,  review: 274, remove: 56 },
+    { name: 'Microsoft',  safe: 464,  review: 83,  remove: 32 },
+    { name: 'AOL',        safe: 186,  review: 91,  remove: 11 },
+    { name: 'Other',      safe: 44,   review: 152, remove: 41 },
+    { name: 'Apple Mac',  safe: 142,  review: 3,   remove: 19 },
+    { name: 'ISP Legacy', safe: 101,  review: 39,  remove: 16 },
+    { name: 'Roadrunner', safe: 58,   review: 67,  remove: 29 }
+  ];
+
+  const maxTotal = Math.max(...domains.map(d => d.safe + d.review + d.remove));
+  const container = document.getElementById('bars');
+
+  domains.forEach(d => {
+    const total = d.safe + d.review + d.remove;
+    const trackWidthPct = (total / maxTotal) * 100;
+    const safePct = (d.safe / total) * 100;
+    const reviewPct = (d.review / total) * 100;
+    const removePct = (d.remove / total) * 100;
+
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label">${d.name}</div>
+      <div class="bar-track" style="width: ${trackWidthPct}%;">
+        <div class="bar-seg safe" style="width: ${safePct}%;" title="Safe: ${d.safe}"></div>
+        <div class="bar-seg review" style="width: ${reviewPct}%;" title="Review: ${d.review}"></div>
+        <div class="bar-seg remove" style="width: ${removePct}%;" title="Remove: ${d.remove}"></div>
+      </div>
+      <div class="bar-total">${total.toLocaleString()}</div>
+    `;
+    container.appendChild(row);
+  });
+</script>
+
+</body>
+</html>
